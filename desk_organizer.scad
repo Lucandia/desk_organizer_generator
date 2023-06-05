@@ -59,11 +59,30 @@ translate([s[0]-r,-s[1]+r,0]) circle(r);};
 translate([s[0]-r,s[1]-r,0]) circle(r);};
 };
 
+module rhex(l=50,r=10,rp=1) {
+r = rp ? max(l*r/100/2) : r; 
+if (r) {
+ipo = l/(2*cos(30));
+hull(){
+for (i = [0 : 5] ){
+    rotate([0,0,60*i])translate([ipo-r/cos(30),0,0])circle(r);
+};};
+}
+else {
+hull(){
+square([l/(cos(30)*2),l],center=true);
+rotate([0,0,120])square([l/(cos(30)*2),l],center=true);
+rotate([0,0,240])square([l/(cos(30)*2),l],center=true);
+};
+};
+};
+
+
 module rbox(internal, external, height, r=7, rp=1, base=2) {
 union(){
 // base
 linear_extrude(base)
-rsquare(internal,r,1);
+rsquare(internal,r,rp);
 // border
 linear_extrude(height)
 difference(){
@@ -71,7 +90,20 @@ rsquare(external,r,rp);
 rsquare(internal,r,rp);};};
 };
 
-module hbox(internal, external, height, r=7, rp=1, base=2, h_dia=4, h_thick=1) {
+module hbox(internal, external, height, r=7, rp=1, base=2) {
+union(){
+// base
+linear_extrude(base)
+rhex(internal,r, rp);
+// border
+linear_extrude(height)
+difference(){
+rhex(external,r,rp);
+rhex(internal,r,rp);};};
+};
+
+
+module rhbox(internal, external, height, r=7, rp=1, base=2, h_dia=4, h_thick=1) {
 // hon_bor is the solid border of the honyecomb, and is set to the minimal value of the walls 
 hon_bor = rp ? max(external*r/100) : r; 
 wall = (external - internal) / 2;
@@ -164,3 +196,44 @@ linear_extrude(wall[0]*2) {
 };
 
 
+module hhbox(internal, external, height, r=7, rp=1, base=2, h_dia=4, h_thick=1) {
+// hon_bor is the solid border of the honyecomb, and is set to the minimal value of the walls 
+hon_bor = rp ? max(external*r/100) : r; 
+wall = (external - internal) / 2;
+ipo_e = external/(2*cos(30));
+intersection(){
+// use the same box shape
+hbox(internal, external, height);
+// add solid corners
+union(){
+// add border
+linear_extrude(height)
+difference(){
+rhex(external,r);
+square([external/(cos(30)*2)-hon_bor*2,external],center=true);
+rotate([0,0,120])square([external/(cos(30)*2)-hon_bor*2,external],center=true);
+rotate([0,0,240])square([external/(cos(30)*2)-hon_bor*2,external],center=true);
+};
+union(){
+ // base 
+ linear_extrude(base)
+  rhex(internal,r);
+for (i = [0 : 5] ){
+rotate([0,0,60*i]){
+// + x
+translate([0, external/2+wall/2, height/2])
+rotate([90,0,0])
+linear_extrude(wall*2) {
+    intersection(){
+    union(){
+    // centered honeycomb
+    translate([-ipo_e/2, -height/2, 0])
+	honeycomb(ipo_e, height, h_dia, h_thick);
+    // border
+    difference(){
+    rsquare([ipo_e,height],0);
+    rsquare([ipo_e-hon_bor,height-hon_bor],0);};};
+    //the full base to intersect
+    rsquare([ipo_e,height],0);
+    };};};};};};};
+ };
