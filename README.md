@@ -11,18 +11,18 @@ The program is designed to run in Streamlit, but follow the below instructions t
 
 ### Generate your organizer:
 
-The program use two openscad libraries: `honeycomb.scad` from [Gael Lafond](https://www.printables.com/it/@GaelLafond) and `desk_organizer.scad`
+The program uses two Openscad libraries: `honeycomb.scad` from [Gael Lafond](https://www.printables.com/it/@GaelLafond) and `desk_organizer.scad`
 
-Include them in the openscad script and add a normal block with:
+Include them in the Openscad script and add a normal block with:
 ```
-rbox(SIZE_INT, SIZE_EXT, HEIGHT, r=R, rp=true, base=BASE_THICK)
+rbox(SIZE_INT, SIZE_EXT, HEIGHT, r=R, rp=true, base=BASE_THICK);
 ```
 where:
 - SIZE_INT is the internal dimension array ([x,y])
 - SIZE_EXT is the internal dimension array ([x,y], usually is calculated as SIZE_INT + [X_WALL\*2, Y_WALL\*2])
 - HEIGHT is the height of the block
-- R is the radius of the curvature of the square perimeter cornerns (default: 7)
-- rp is a boolean value: it false the program interprets R as value in mm, if true consider R as the percentage over the lenght of the square side (default: true)
+- R is the radius of the curvature of the square perimeter corners (default: 7)
+- rp is a boolean value: it false the program interprets R as a value in mm, if true consider R as the percentage over the length of the square side (default: true)
 - BASE_THICK is the thickness of the base (default: 2)
 
 Add a honeycomb block with:
@@ -33,10 +33,10 @@ where:
 - SIZE_INT is the internal dimension array ([x,y])
 - SIZE_EXT is the internal dimension array ([x,y], usually is calculated as SIZE_INT + [X_WALL\*2, Y_WALL\*2])
 - HEIGHT is the height of the block
-- R is the radius of the curvature of the square perimeter cornerns (default: 7)
-- rp is a boolean value: it false the program interprets R as value in mm, if true consider R as the percentage over the lenght of the square side (default: true)
+- R is the radius of the curvature of the square perimeter corners (default: 7)
+- rp is a boolean value: it false the program interprets R as a value in mm, if true consider R as the percentage over the length of the square side (default: true)
 - BASE_THICK is the thickness of the base (default: 2)
-- H_DIA is the honeycomb diamter (default: 4)
+- H_DIA is the honeycomb diameter (default: 4)
 - H_THICK is the honeycomb line thickness (default: 1)
  
 ## Support
@@ -45,7 +45,7 @@ I enjoy working on this project in my free time, if you want to support me with 
 
 ## License
 
-Code and Models are licensed under the Creative Commons Non Commercial Share Alike License 4.0 ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/))
+Code and Models are licensed under the Creative Commons Non-Commercial Share Alike License 4.0 ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/))
 
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
