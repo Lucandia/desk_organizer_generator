@@ -1,5 +1,5 @@
 # Desk Organizer Generator
-Generate custom 3D models of desktop organizers. Visit the instructions on the [Printables page](https://www.printables.com/it/model/498850-desk-organizer-generator)!
+Generate a 3D model for a custom Desk Organizer from simple building blocks. Visit the instructions on the [Printables page](https://www.printables.com/it/model/498850-desk-organizer-generator)!
 
 ## Try the web app:
 
