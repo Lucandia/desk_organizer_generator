@@ -126,7 +126,9 @@ base = 2;
 """
 
     st.title('Desk Organizer Generator!')
-    st.write('Generate a 3D model for a custom desk organizer with simple building blocks!')
+    st.write('Generate a 3D model for a custom Desk Organizer from simple building blocks.')
+    st.write('Visit the instructions on the [Printables page](https://www.printables.com/it/model/498850-desk-organizer-generator)!')
+    st.write('Note: the Honeycomb pattern increases the rendering time.')
 
     blocks_text = st.session_state['blocks_text']
     # Add blocks 
@@ -242,7 +244,7 @@ base = 2;
             st.stop()
         with open(f"file.stl", "rb") as file:
             html = create_download_link(file.read(), "model")
-            st.markdown("Please, put a like [on Printables](https://www.printables.com/it/model/489136-customizable-soap-sponge-dish-holder-normal-with-p) to support the project!", unsafe_allow_html=True)
+            st.markdown("Please, put a like [on Printables](https://www.printables.com/it/model/498850-desk-organizer-generator) to support the project!", unsafe_allow_html=True)
             st.markdown("I am a student who enjoys 3D printing and programming. If you want to support me with a coffee, just [click here!](https://www.paypal.com/donate/?hosted_button_id=V4LJ3Z3B3KXRY)", unsafe_allow_html=True)
             st.markdown(html, unsafe_allow_html=True)
         st.write('Interactive mesh preview:')
