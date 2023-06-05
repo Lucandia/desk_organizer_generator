@@ -1,5 +1,5 @@
 # Desk Organizer Generator
-Generate custom 3D models of desktop organizers. Visit the original [Printables page](https://www.printables.com/it/model/489136-geometric-soap-dish-holder-normal-with-plate-or-or)!
+Generate custom 3D models of desktop organizers. Visit the instructions on the [Printables page](https://www.printables.com/it/model/498850-desk-organizer-generator)!
 
 ## Try the web app:
 
