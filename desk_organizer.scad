@@ -36,10 +36,10 @@ rsquare(external,r,rp);
 rsquare(internal,r,rp);};};
 };
 
-module hbox(internal, external, height, r=7, rp=1, base=2, wall=2, h_dia=4, h_thick=1) {
+module hbox(internal, external, height, r=7, rp=1, base=2, h_dia=4, h_thick=1) {
 // hon_bor is the solid border of the honyecomb, and is set to the minimal value of the walls 
 hon_bor = rp ? max(external*r/100) : r; 
-
+wall = (external - internal) / 2
 union(){
 linear_extrude(height)
 difference(){
