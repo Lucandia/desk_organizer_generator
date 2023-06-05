@@ -211,34 +211,36 @@ base = 2;
         with col3:
             h_thick = st.number_input('Honeycomb line size', value=1.0)
         
-        submitted = st.form_submit_button("Add block")
-        if submitted:
-            blocks[index] = dict()
-            if shape == 'Honeycomb':
-                y_size = x_size
-                y_wall = x_wall
-            blocks[index]['shape'] = shape
-            blocks[index]['int'] = [x_size, y_size]
-            blocks[index]['ext'] = [x_size + x_wall*2, y_size + y_wall*2]
-            blocks[index]['wal'] = [x_wall, y_wall]
-            if center:
-                blocks[index]['center'] = [0,0]
-            else:
-                blocks[index]['center'] = find_center(index, ref, pos, ali)
-            blocks_text[index] = add_block(index, shape, blocks[index]['int'], blocks[index]['ext'], height, pat, h_dia, h_thick)
-            st.session_state['blocks'].update(blocks)
-            st.session_state['blocks_text'].update(blocks_text)
-            st.experimental_rerun()
-    remove = st.checkbox('Remove block')
-    if remove:
-        with st.form('Remove'):
-            st.markdown('**Remove a block from the organizer**')
-            rem = st.selectbox('Select the reference block', sorted(list(blocks), reverse=True))
-            submitted = st.form_submit_button("Remove block")
-            if submitted:
-                st.session_state['blocks'].pop(rem)
-                st.session_state['blocks_text'].pop(rem)
+        col1, col2 = st.columns(2)
+        with col1:
+            add = st.form_submit_button("Add block")
+            if add:
+                blocks[index] = dict()
+                if shape == 'Honeycomb':
+                    y_size = x_size
+                    y_wall = x_wall
+                blocks[index]['shape'] = shape
+                blocks[index]['int'] = [x_size, y_size]
+                blocks[index]['ext'] = [x_size + x_wall*2, y_size + y_wall*2]
+                blocks[index]['wal'] = [x_wall, y_wall]
+                if center:
+                    blocks[index]['center'] = [0,0]
+                else:
+                    blocks[index]['center'] = find_center(index, ref, pos, ali)
+                blocks_text[index] = add_block(index, shape, blocks[index]['int'], blocks[index]['ext'], height, pat, h_dia, h_thick)
+                st.session_state['blocks'].update(blocks)
+                st.session_state['blocks_text'].update(blocks_text)
                 st.experimental_rerun()
+        with col2:
+            if blocks:
+                remove = st.form_submit_button("Remove block")
+                if remove:
+                    if ref not in blocks:
+                        st.warning(f'Block {ref} not found. No block removed.', icon="⚠️")
+                    else:
+                        st.session_state['blocks'].pop(ref)
+                        st.session_state['blocks_text'].pop(ref)
+                        st.experimental_rerun()
 
 
     if not blocks:
@@ -257,10 +259,8 @@ base = 2;
     preview = False
     if not st.button('Render'):
         preview = True
-        st.write('Visualizing the preview')
-
     if preview:
-        subprocess.run('xvfb-run -a openscad -o preview.png --autocenter --viewall  --projection=ortho run.scad', shell = True)
+        subprocess.run('xvfb-run -a openscad -o preview.png --camera 0,0,0,30,0,0,0 --autocenter --viewall  --projection=ortho run.scad', shell = True)
     else:
         start = time.time()
         # run openscad
