@@ -1,3 +1,38 @@
+/*
+ * Desk Organizer Generator library
+ * License: Creative Commons - Non Commercial - Share Alike License 4.0 (CC BY-NC-SA 4.0)
+ * Copyright: Luca Monari 2023
+ * URL: https://github.com/lmonari5/desk_organizer_generator.git
+ 
+The program uses the honeycomb library from Gael Lafond, from https://www.thingiverse.com/thing:2484395.
+
+Add a normal block with:
+```
+rbox(SIZE_INT, SIZE_EXT, HEIGHT, r=R, rp=true, base=BASE_THICK);
+```
+where:
+- SIZE_INT is the internal dimension array ([x,y])
+- SIZE_EXT is the internal dimension array ([x,y], usually is calculated as SIZE_INT + [X_WALL\*2, Y_WALL\*2])
+- HEIGHT is the height of the block
+- R is the radius of the curvature of the square perimeter corners (default: 7)
+- rp is a boolean value: it false the program interprets R as a value in mm, if true consider R as the percentage over the length of the square side (default: true)
+- BASE_THICK is the thickness of the base (default: 2)
+
+Add a honeycomb block with:
+```
+hbox(SIZE_INT, SIZE_EXT, HEIGHT, r=R, rp=true, base=BASE_THICK, h_dia=H_DIA, h_thick=H_THICK) ;
+```
+where:
+- SIZE_INT is the internal dimension array ([x,y])
+- SIZE_EXT is the internal dimension array ([x,y], usually is calculated as SIZE_INT + [X_WALL\*2, Y_WALL\*2])
+- HEIGHT is the height of the block
+- R is the radius of the curvature of the square perimeter corners (default: 7)
+- rp is a boolean value: it false the program interprets R as a value in mm, if true consider R as the percentage over the length of the square side (default: true)
+- BASE_THICK is the thickness of the base (default: 2)
+- H_DIA is the honeycomb diameter (default: 4)
+- H_THICK is the honeycomb line thickness (default: 1)
+*/
+
 include <honeycomb.scad>
 $fn = 40;
 
