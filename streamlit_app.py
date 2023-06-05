@@ -7,6 +7,7 @@ import streamlit as st
 from PIL import Image
 import os
 import time
+import math
 import base64 # to download from html link
 
 def create_download_link(val, filename):
@@ -68,40 +69,75 @@ def figure_mesh(filename):
   return fig
 
 def find_center(ind, ref, pos, ali):
+    conv = 2*math.cos(30*math.pi/180)
     prev_center = blocks[ref]['center']
     center = [prev_center[0], prev_center[1]]
+    ref_y = blocks[ref]['ext'][1]/2
+    ref_x = blocks[ref]['ext'][0]/2
+    bl_y = blocks[ind]['ext'][1]/2
+    bl_x = blocks[ind]['ext'][0]/2
+    w_overlap_y = min([blocks[ref]['wal'][1], blocks[ind]['wal'][1]])
+    w_overlap_x = min([blocks[ref]['wal'][0], blocks[ind]['wal'][0]])
+    honey = (blocks[ref]['shape'] == 'Honeycomb' and blocks[ind]['shape'] == 'Honeycomb')
+    if blocks[ref]['shape'] == 'Honeycomb':
+        ref_x = blocks[ref]['ext'][0]/conv
+    if blocks[ind]['shape'] == 'Honeycomb':
+        bl_x = blocks[ind]['ext'][0]/conv
     if pos == 'back':
-        center[1] += blocks[ref]['ext'][1]/2 + blocks[ind]['ext'][1]/2 - min([blocks[ref]['wal'][1], blocks[ind]['wal'][1]])
+        center[1] += ref_y + bl_y - w_overlap_y
     elif pos == 'front':
-        center[1] -= blocks[ref]['ext'][1]/2 + blocks[ind]['ext'][1]/2 - min([blocks[ref]['wal'][1], blocks[ind]['wal'][1]])
+        center[1] -= ref_y + bl_y - w_overlap_y
     elif pos == 'right':
-        center[0] += blocks[ref]['ext'][0]/2 + blocks[ind]['ext'][0]/2 - min([blocks[ref]['wal'][0], blocks[ind]['wal'][0]])
+        center[0] += ref_x + bl_x - w_overlap_x
     elif pos == 'left':
-        center[0] -= blocks[ref]['ext'][0]/2 + blocks[ind]['ext'][0]/2 - min([blocks[ref]['wal'][0], blocks[ind]['wal'][0]])
-    if ali == 'top':
-        center[1] += blocks[ref]['ext'][1]/2 - blocks[ind]['ext'][1]/2
-    elif ali == 'bottom':
-        center[1] -= blocks[ref]['ext'][1]/2 - blocks[ind]['ext'][1]/2
+        center[0] -= ref_x + bl_x - w_overlap_x
+    if ali == 'top' and not honey:
+        center[1] += ref_y - bl_y
+    elif ali == 'bottom' and not honey:
+        center[1] -= ref_y - bl_y
     elif ali == 'right':
-        center[0] += blocks[ref]['ext'][0]/2 - blocks[ind]['ext'][0]/2
+        center[0] += ref_x - bl_x
     elif ali == 'left':
-        center[0] -= blocks[ref]['ext'][0]/2 - blocks[ind]['ext'][0]/2
+        center[0] -= ref_x - bl_x
+    if honey and ali in ('top', 'bottom'):
+        if pos == 'left':
+            center[0] += ref_x/2
+        elif pos == 'right':
+            center[0] -= ref_x/2
+        if ali == 'top':
+            center[1] += ref_x - w_overlap_x * 2
+        elif ali == 'bottom':
+            center[1] -= ref_x - w_overlap_x * 2
     return center
 
 
-def add_block(ind, size_int, size_ext, height, pat, h_dia, h_thick):
-    if pat == 'Honeycomb':
-        return str(f"""
-color("{color[ind-1]}")
-translate([{blocks[index]['center'][0]},{blocks[index]['center'][1]},0])
-hbox([{size_int[0]},{size_int[1]}], [{size_ext[0]},{size_ext[1]}], {height}, h_dia={h_dia}, h_thick={h_thick});
-""")
+def add_block(ind, shape, size_int, size_ext, height, pat, h_dia, h_thick):
+    if shape == 'Square':
+        if pat == 'Honeycomb':
+            return str(f"""
+    color("{color[ind-1]}")
+    translate([{blocks[index]['center'][0]},{blocks[index]['center'][1]},0])
+    rhbox([{size_int[0]},{size_int[1]}], [{size_ext[0]},{size_ext[1]}], {height}, h_dia={h_dia}, h_thick={h_thick});
+    """)
+        else:
+            return str(f"""
+    color("{color[ind-1]}")
+    translate([{blocks[index]['center'][0]},{blocks[index]['center'][1]},0])
+    rbox([{size_int[0]},{size_int[1]}], [{size_ext[0]},{size_ext[1]}], {height}) ;
+    """)
     else:
-        return str(f"""
-color("{color[ind-1]}")
-translate([{blocks[index]['center'][0]},{blocks[index]['center'][1]},0])
-rbox([{size_int[0]},{size_int[1]}], [{size_ext[0]},{size_ext[1]}], {height}) ;
-""")
+        if pat == 'Honeycomb':
+            return str(f"""
+    color("{color[ind-1]}")
+    translate([{blocks[index]['center'][0]},{blocks[index]['center'][1]},0])
+    hhbox({size_int[0]}, {size_ext[0]}, {height}, h_dia={h_dia}, h_thick={h_thick});
+    """)
+        else:
+            return str(f"""
+    color("{color[ind-1]}")
+    translate([{blocks[index]['center'][0]},{blocks[index]['center'][1]},0])
+    hbox({size_int[0]}, {size_ext[0]}, {height}) ;
+    """)
 
 
 if __name__ == "__main__":
@@ -151,16 +187,19 @@ base = 2;
             pos = None
             ali = None
         col1, col2, col3 = st.columns(3)
+        st.write('The Honeycomb shape only considers the X values')
         with col1:
+            shape = st.selectbox('Block Shape', ['Square', 'Honeycomb'])
+        with col2:
             x_size = st.number_input('X size', value=40.0)
-        with col2:
-            y_size = st.number_input('Y size', value=40.0)
         with col3:
-            height = st.number_input('Height', value=70.0)
-        col1, col2 = st.columns(2)
+            y_size = st.number_input('Y size', value=40.0)
+        col1, col2, col3 = st.columns(3)
         with col1:
-            x_wall = st.number_input('Wall X thickness', value=2.0)
+            height = st.number_input('Height', value=70.0)
         with col2:
+            x_wall = st.number_input('Wall X thickness', value=2.0)
+        with col3:
             y_wall = st.number_input('Wall Y thickness', value=2.0)
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -175,6 +214,10 @@ base = 2;
         submitted = st.form_submit_button("Add block")
         if submitted:
             blocks[index] = dict()
+            if shape == 'Honeycomb':
+                y_size = x_size
+                y_wall = x_wall
+            blocks[index]['shape'] = shape
             blocks[index]['int'] = [x_size, y_size]
             blocks[index]['ext'] = [x_size + x_wall*2, y_size + y_wall*2]
             blocks[index]['wal'] = [x_wall, y_wall]
@@ -182,7 +225,7 @@ base = 2;
                 blocks[index]['center'] = [0,0]
             else:
                 blocks[index]['center'] = find_center(index, ref, pos, ali)
-            blocks_text[index] = add_block(index, blocks[index]['int'], blocks[index]['ext'], height, pat, h_dia, h_thick)
+            blocks_text[index] = add_block(index, shape, blocks[index]['int'], blocks[index]['ext'], height, pat, h_dia, h_thick)
             st.session_state['blocks'].update(blocks)
             st.session_state['blocks_text'].update(blocks_text)
             st.experimental_rerun()
@@ -212,7 +255,7 @@ base = 2;
     st.write('The program renders with OpenScad, full rendering of a mesh takes a while. If you want to run it faster on your pc, check out the [Github page](https://github.com/lmonari5/desk_organizer_generator.git).')
 
     preview = False
-    if not st.button('Run'):
+    if not st.button('Render'):
         preview = True
         st.write('Visualizing the preview')
 
