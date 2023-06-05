@@ -71,13 +71,13 @@ def find_center(ind, ref, pos, ali):
     prev_center = blocks[ref]['center']
     center = [prev_center[0], prev_center[1]]
     if pos == 'back':
-        center[1] += blocks[ref]['ext'][1]/2 + blocks[ind]['ext'][1]/2 - blocks[ref]['wal'][1]/2
+        center[1] += blocks[ref]['ext'][1]/2 + blocks[ind]['ext'][1]/2 - blocks[ref]['wal'][1]
     elif pos == 'front':
-        center[1] -= blocks[ref]['ext'][1]/2 + blocks[ind]['ext'][1]/2 - blocks[ref]['wal'][1]/2
+        center[1] -= blocks[ref]['ext'][1]/2 + blocks[ind]['ext'][1]/2 - blocks[ref]['wal'][1]
     elif pos == 'right':
-        center[0] += blocks[ref]['ext'][0]/2 + blocks[ind]['ext'][0]/2 - blocks[ref]['wal'][0]/2
+        center[0] += blocks[ref]['ext'][0]/2 + blocks[ind]['ext'][0]/2 - blocks[ref]['wal'][0]
     elif pos == 'left':
-        center[0] -= blocks[ref]['ext'][0]/2 + blocks[ind]['ext'][0]/2 - blocks[ref]['wal'][0]/2
+        center[0] -= blocks[ref]['ext'][0]/2 + blocks[ind]['ext'][0]/2 - blocks[ref]['wal'][0]
     if ali == 'top':
         center[1] += blocks[ref]['ext'][1]/2 - blocks[ind]['ext'][1]/2
     elif ali == 'bottom':
