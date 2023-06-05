@@ -89,12 +89,12 @@ def find_center(ind, ref, pos, ali):
     return center
 
 
-def add_block(ind, size_int, size_ext, height, size_wal, pat, h_dia, h_thick):
+def add_block(ind, size_int, size_ext, height, pat, h_dia, h_thick):
     if pat == 'Honeycomb':
         return str(f"""
 color("{color[ind-1]}")
 translate([{blocks[index]['center'][0]},{blocks[index]['center'][1]},0])
-hbox([{size_int[0]},{size_int[1]}], [{size_ext[0]},{size_ext[1]}], {height}, wall=[{size_wal[0]},{size_wal[1]}], h_dia={h_dia}, h_thick={h_thick});
+hbox([{size_int[0]},{size_int[1]}], [{size_ext[0]},{size_ext[1]}], {height}, h_dia={h_dia}, h_thick={h_thick});
 """)
     else:
         return str(f"""
@@ -180,7 +180,7 @@ base = 2;
                 blocks[index]['center'] = [0,0]
             else:
                 blocks[index]['center'] = find_center(index, ref, pos, ali)
-            blocks_text[index] = add_block(index, blocks[index]['int'], blocks[index]['ext'], height, blocks[index]['wal'], pat, h_dia, h_thick)
+            blocks_text[index] = add_block(index, blocks[index]['int'], blocks[index]['ext'], height, pat, h_dia, h_thick)
             st.session_state['blocks'].update(blocks)
             st.session_state['blocks_text'].update(blocks_text)
             st.experimental_rerun()
