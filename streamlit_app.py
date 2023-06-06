@@ -76,13 +76,19 @@ def find_center(ind, ref, pos, ali):
     ref_x = blocks[ref]['ext'][0]/2
     bl_y = blocks[ind]['ext'][1]/2
     bl_x = blocks[ind]['ext'][0]/2
-    w_overlap_y = min([blocks[ref]['wal'][1], blocks[ind]['wal'][1]])
-    w_overlap_x = min([blocks[ref]['wal'][0], blocks[ind]['wal'][0]])
+    ref_wx = blocks[ref]['wal'][0]
+    ref_wy = blocks[ref]['wal'][1]
+    bl_wx = blocks[ind]['wal'][0]
+    bl_wy = blocks[ind]['wal'][0]
     honey = (blocks[ref]['shape'] == 'Honeycomb' and blocks[ind]['shape'] == 'Honeycomb')
     if blocks[ref]['shape'] == 'Honeycomb':
         ref_x = blocks[ref]['ext'][0]/conv
+        ref_y = blocks[ref]['ext'][0]/2
     if blocks[ind]['shape'] == 'Honeycomb':
         bl_x = blocks[ind]['ext'][0]/conv
+        bl_y = blocks[ind]['ext'][0]/2
+    w_overlap_y = min([ref_wy, bl_wy])
+    w_overlap_x = min([ref_wx, bl_wx])
     if pos == 'back':
         center[1] += ref_y + bl_y - w_overlap_y
     elif pos == 'front':
@@ -105,9 +111,9 @@ def find_center(ind, ref, pos, ali):
         elif pos == 'right':
             center[0] -= ref_x/2
         if ali == 'top':
-            center[1] += ref_x - w_overlap_x * 2
+            center[1] += ref_y - w_overlap_y/2
         elif ali == 'bottom':
-            center[1] -= ref_x - w_overlap_x * 2
+            center[1] -= ref_y - w_overlap_y/2
     return center
 
 
