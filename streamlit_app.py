@@ -70,6 +70,7 @@ def figure_mesh(filename):
 
 def find_center(ind, ref, pos, ali):
     conv = 2*math.cos(30*math.pi/180)
+    cos = math.cos(30*math.pi/180)
     prev_center = blocks[ref]['center']
     center = [prev_center[0], prev_center[1]]
     ref_y = blocks[ref]['ext'][1]/2
@@ -82,21 +83,23 @@ def find_center(ind, ref, pos, ali):
     bl_wy = blocks[ind]['wal'][0]
     honey = (blocks[ref]['shape'] == 'Honeycomb' and blocks[ind]['shape'] == 'Honeycomb')
     if blocks[ref]['shape'] == 'Honeycomb':
-        ref_x = blocks[ref]['ext'][0]/conv
+        ref_x *= 2/conv
         ref_y = blocks[ref]['ext'][0]/2
     if blocks[ind]['shape'] == 'Honeycomb':
-        bl_x = blocks[ind]['ext'][0]/conv
+        bl_x *= 2/conv
         bl_y = blocks[ind]['ext'][0]/2
     w_overlap_y = min([ref_wy, bl_wy])
     w_overlap_x = min([ref_wx, bl_wx])
+    move_x = ref_x + bl_x - w_overlap_x
+    move_y = ref_y + bl_y - w_overlap_y
     if pos == 'back':
-        center[1] += ref_y + bl_y - w_overlap_y
+        center[1] += move_y
     elif pos == 'front':
-        center[1] -= ref_y + bl_y - w_overlap_y
+        center[1] -= move_y
     elif pos == 'right':
-        center[0] += ref_x + bl_x - w_overlap_x
+        center[0] += move_x
     elif pos == 'left':
-        center[0] -= ref_x + bl_x - w_overlap_x
+        center[0] -= move_x
     if ali == 'top' and not honey:
         center[1] += ref_y - bl_y
     elif ali == 'bottom' and not honey:
@@ -106,14 +109,18 @@ def find_center(ind, ref, pos, ali):
     elif ali == 'left':
         center[0] -= ref_x - bl_x
     if honey and ali in ('top', 'bottom'):
+        center[0] = prev_center[0]
+        # don't use normal wall, but wall that take into account the slope
+        x_offset = blocks[ref]['ext'][0]*cos - w_overlap_x * cos - blocks[ref]['ext'][0]*math.sqrt(3)/3 + blocks[ind]['ext'][0]*math.sqrt(3)/3
+        y_offset = blocks[ref]['ext'][0]/2  - w_overlap_x/2
         if pos == 'left':
-            center[0] += ref_x/2
+            center[0] -= x_offset
         elif pos == 'right':
-            center[0] -= ref_x/2
+            center[0] += x_offset
         if ali == 'top':
-            center[1] += ref_y - w_overlap_y/2
+            center[1] += y_offset
         elif ali == 'bottom':
-            center[1] -= ref_y - w_overlap_y/2
+            center[1] -= y_offset
     return center
 
 
