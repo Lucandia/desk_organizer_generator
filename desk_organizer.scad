@@ -38,7 +38,7 @@ $fn = 40;
 
 // module for round 2D square
 module rsquare(l=[50, 50],r=10,rp=0) {
-r = rp ? max(l*r/100/2) : r; 
+r = rp ? min(l*r/100/2) : r; 
 s = l/2;
 union(){
 union(){
