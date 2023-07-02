@@ -1,4 +1,2 @@
-imagemagick
-potrace
 openscad
 xvfb
