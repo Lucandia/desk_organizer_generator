@@ -1,2 +1,3 @@
+libc6==2.31-13+deb11u6
 openscad
 xvfb
