@@ -3,9 +3,9 @@ Generate a 3D model for a custom Desk Organizer from simple building blocks. Vis
 
 ## Try the web app:
 
-[Desk Organizer Generator](https://desk-organizer-generator.streamlit.app/) powered by streamlit
+[Desk Organizer Generator](https://desk-organizer.streamlit.app/) powered by streamlit
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://desk-organizer-generator.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://desk-organizer.streamlit.app/)
 
 The program is designed to run in Streamlit, but follow the below instructions to use the libraries directly in Openscad.
 
